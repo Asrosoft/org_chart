@@ -34,6 +34,9 @@ class GenogramController<E> extends BaseGraphController<E> {
   /// Used for correct positioning in family groups and relationship visualization
   int Function(E data) genderProvider;
 
+  /// Option to disable sorting nodes by males first
+  bool malesFirst;
+
   /// Cache for getParents method to improve performance
   final Map<String, List<Node<E>>> _parentsCache = {};
 
@@ -66,6 +69,7 @@ class GenogramController<E> extends BaseGraphController<E> {
     required this.motherProvider,
     required this.spousesProvider,
     required this.genderProvider,
+    this.malesFirst = true,
   }) {
     // Calculate initial positions after construction
     calculatePosition();
@@ -533,9 +537,12 @@ class GenogramController<E> extends BaseGraphController<E> {
     // Prioritize processing male nodes first among roots
     List<Node<E>> sortedRoots = [...roots];
     sortedRoots.sort((a, b) {
-      // Males come first
-      // if (isMale(a.data) && !isMale(b.data)) return -1;
-      // if (!isMale(a.data) && isMale(b.data)) return 1;
+
+      if (malesFirst) {
+        // Males come first
+        if (isMale(a.data) && !isMale(b.data)) return -1;
+        if (!isMale(a.data) && isMale(b.data)) return 1;
+      }
 
       // Otherwise sort by ID for consistency
       return idProvider(a.data).compareTo(idProvider(b.data));
