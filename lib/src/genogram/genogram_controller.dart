@@ -534,8 +534,8 @@ class GenogramController<E> extends BaseGraphController<E> {
     List<Node<E>> sortedRoots = [...roots];
     sortedRoots.sort((a, b) {
       // Males come first
-      if (isMale(a.data) && !isMale(b.data)) return -1;
-      if (!isMale(a.data) && isMale(b.data)) return 1;
+      // if (isMale(a.data) && !isMale(b.data)) return -1;
+      // if (!isMale(a.data) && isMale(b.data)) return 1;
 
       // Otherwise sort by ID for consistency
       return idProvider(a.data).compareTo(idProvider(b.data));
