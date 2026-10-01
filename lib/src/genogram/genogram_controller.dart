@@ -34,6 +34,11 @@ class GenogramController<E> extends BaseGraphController<E> {
   /// Used for correct positioning in family groups and relationship visualization
   int Function(E data) genderProvider;
 
+  /// Function to indicate if this node should be hidden
+  /// but still used to position nodes
+  /// Returns an empty list if the item has no spouses
+  bool Function(E data) hiddenProvider;
+
   /// Option to disable sorting nodes by males first
   bool malesFirst;
 
@@ -69,6 +74,7 @@ class GenogramController<E> extends BaseGraphController<E> {
     required this.motherProvider,
     required this.spousesProvider,
     required this.genderProvider,
+    required this.hiddenProvider,
     this.malesFirst = true,
   }) {
     // Calculate initial positions after construction
@@ -127,6 +133,10 @@ class GenogramController<E> extends BaseGraphController<E> {
   /// Convenience method to check if a data item represents a male
   /// Returns true if the gender code is 0
   bool isMale(E data) => genderProvider(data) == 0;
+
+  /// Convenience method to check if a data item should be hidden
+  /// Returns false unless method returns true
+  bool isHidden(E data) => hiddenProvider(data) ?? false;
 
   /// Convenience method to check if a data item represents a female
   /// Returns true if the gender code is 1
